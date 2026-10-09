@@ -14,7 +14,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $taskSource = $PSScriptRoot
-if ($env:OS -ne 'Windows_NT') { throw 'UI-TARS Local Control requires Windows.' }
+if ($env:OS -ne 'Windows_NT') { throw 'Local Eye requires Windows.' }
 $taskNode = (Get-Command node -ErrorAction Stop).Source
 $taskNpm = (Get-Command npm.cmd -ErrorAction Stop).Source
 $taskNodeVersion = & $taskNode --version
@@ -24,7 +24,7 @@ $InstallDirectory = [IO.Path]::GetFullPath($InstallDirectory)
 if ($InstallDirectory.TrimEnd('\') -eq $taskSource.TrimEnd('\')) { throw 'Choose an install directory different from the source checkout.' }
 if (-not $SkillDirectory) {
     $taskCodexRoot = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE '.codex' }
-    $SkillDirectory = Join-Path $taskCodexRoot 'skills\ui-tars-local-control'
+    $SkillDirectory = Join-Path $taskCodexRoot 'skills\local-eye'
 }
 $SkillDirectory = [IO.Path]::GetFullPath($SkillDirectory)
 if ($SkillDirectory.TrimEnd('\') -eq (Join-Path $taskSource 'skill').TrimEnd('\')) { throw 'Choose a skill directory different from the source skill.' }
@@ -84,5 +84,5 @@ if (-not $SkipMcpRegistration) {
     & $taskCodex mcp add ui_tars_local_control -- $taskNode (Join-Path $InstallDirectory 'src\server.mjs')
     if ($LASTEXITCODE -ne 0) { throw 'MCP registration failed. The bridge and skill are installed; register the server manually.' }
 }
-Write-Output "Installed UI-TARS Local Control in $InstallDirectory"
+Write-Output "Installed Local Eye in $InstallDirectory"
 Write-Output "Installed skill in $SkillDirectory"

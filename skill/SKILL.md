@@ -1,9 +1,9 @@
 ---
-name: ui-tars-local-control
-description: Delegate bounded Windows GUI tasks to a local UI-TARS model to keep repeated screenshot and action loops off the cloud model. Use when the user asks for UI-TARS Local Control or local-model desktop delegation. Requires the installed bridge, an unlocked Windows desktop, and a selected application window.
+name: local-eye
+description: Delegate bounded Windows GUI tasks to a local UI-TARS model to keep repeated screenshot and action loops off the cloud model. Use when the user asks for Local Eye, UI-TARS Local Control, or local-model desktop delegation. Requires the installed bridge, an unlocked Windows desktop, and a selected application window.
 ---
 
-# UI-TARS Local Control
+# Local Eye
 
 Use the installed `ui_tars_local_control` MCP server. It delegates tasks to a local UI-TARS 1.5 model using ByteDance's desktop operator. Call `health` for the actual endpoint and data directory. Copying this skill alone does not install the bridge; setup is documented in the [repository](https://github.com/basel5099/ui-tars-local-control).
 

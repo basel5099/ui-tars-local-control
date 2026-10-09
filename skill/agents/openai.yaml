@@ -1,4 +1,4 @@
 interface:
-  display_name: "UI-TARS Local Control"
+  display_name: "Local Eye"
   short_description: "Delegate Windows GUI tasks to your local UI-TARS model"
-  default_prompt: "Use $ui-tars-local-control to carry out this Windows desktop task with my local model and verify the result."
+  default_prompt: "Use $local-eye to carry out this Windows desktop task with my local model and verify the result."

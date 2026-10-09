@@ -1,8 +1,8 @@
-# UI-TARS Local Control
+# Local Eye
 
 [![Windows checks](https://github.com/basel5099/ui-tars-local-control/actions/workflows/checks.yml/badge.svg)](https://github.com/basel5099/ui-tars-local-control/actions/workflows/checks.yml)
 
-A Windows MCP bridge and Codex skill that let a supervising assistant delegate a bounded GUI task to a **local UI-TARS 1.5 model**. The local worker handles repeated screenshots and mouse/keyboard actions, then returns a compact result for verification.
+**Local Eye** is a Windows MCP bridge and Codex skill that let a supervising assistant delegate a bounded GUI task to a **local UI-TARS 1.5 model**. The local worker handles repeated screenshots and mouse/keyboard actions, then returns a compact result for verification. Invoke the skill as `$local-eye`.
 
 This can reduce the screenshots and action history sent to a cloud assistant. The supervising assistant still uses tokens for planning, tool calls, and verification; no fixed savings are promised.
 
@@ -59,7 +59,7 @@ Defaults:
 | Component | Location |
 | --- | --- |
 | Bridge | `%LOCALAPPDATA%\UI-TARS-Local-Control` |
-| Skill | `%CODEX_HOME%\skills\ui-tars-local-control`, or `%USERPROFILE%\.codex\skills\ui-tars-local-control` |
+| Skill | `%CODEX_HOME%\skills\local-eye`, or `%USERPROFILE%\.codex\skills\local-eye` |
 | Model settings | `control.config.json` inside the bridge directory |
 | Local jobs | `data\jobs` inside the bridge directory |
 
@@ -98,7 +98,9 @@ Optional automatic startup: supply `-ModelLauncher 'C:\path\to\Start-Model.ps1'`
 
 Example prompt:
 
-> Use $ui-tars-local-control to type "LOCAL CONTROL OK" in the open test application, click Confirm, and verify the displayed result.
+> Use $local-eye to type "LOCAL CONTROL OK" in the open test application, click Confirm, and verify the displayed result.
+
+Local Eye was previously named UI-TARS Local Control. When upgrading an existing installation, move the old `ui-tars-local-control` skill folder out of your skills directory after installing `local-eye` to avoid duplicate discovery. The MCP server remains registered as `ui_tars_local_control` for compatibility.
 
 The skill selects a visible window, submits a bounded task, waits for compact status, and verifies the outcome. Keep the target fully on the primary display and avoid interacting with the desktop during execution. **Press F8 to stop.** Changing focus also stops subsequent input.
 

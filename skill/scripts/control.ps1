@@ -8,6 +8,6 @@ if (-not $taskInstall -and (Test-Path -LiteralPath $taskSettingsPath)) {
 }
 if (-not $taskInstall) { $taskInstall = Join-Path $env:LOCALAPPDATA 'UI-TARS-Local-Control' }
 $taskCli = Join-Path $taskInstall 'src\cli.mjs'
-if (-not (Test-Path -LiteralPath $taskCli)) { throw 'Bridge is not installed. Run install.ps1 from the UI-TARS Local Control repository first.' }
+if (-not (Test-Path -LiteralPath $taskCli)) { throw 'Bridge is not installed. Run install.ps1 from the Local Eye repository first.' }
 & node $taskCli @taskArguments
 exit $LASTEXITCODE
