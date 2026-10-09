@@ -1,0 +1,22 @@
+name: Windows checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install bridge and run unit and MCP checks
+        shell: powershell
+        run: |
+          ./install.ps1 -InstallDirectory "$env:RUNNER_TEMP\UI-TARS bridge" -SkillDirectory "$env:RUNNER_TEMP\UI-TARS skill" -SkipMcpRegistration
+      - name: Check installed CLI helper
+        shell: powershell
+        run: |
+          & "$env:RUNNER_TEMP\UI-TARS skill\scripts\control.ps1" health
+          if ($LASTEXITCODE -ne 0) { throw 'CLI helper failed.' }

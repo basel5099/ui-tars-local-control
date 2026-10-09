@@ -1,0 +1,30 @@
+{
+  "name": "ui-tars-local-control",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local UI-TARS task delegation over MCP and CLI",
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "test:mcp": "node test/mcp-check.mjs"
+  },
+  "keywords": ["ui-tars", "mcp", "codex-skill", "local-ai", "windows-automation"],
+  "author": "basel5099",
+  "license": "ISC",
+  "engines": { "node": ">=22" },
+  "os": ["win32"],
+  "repository": { "type": "git", "url": "https://github.com/basel5099/ui-tars-local-control.git" },
+  "homepage": "https://github.com/basel5099/ui-tars-local-control#readme",
+  "bugs": { "url": "https://github.com/basel5099/ui-tars-local-control/issues" },
+  "type": "module",
+  "dependencies": {
+    "@computer-use/nut-js": "4.2.0",
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "@ui-tars/operator-nut-js": "1.2.3",
+    "@ui-tars/sdk": "1.2.3",
+    "jimp": "1.6.0",
+    "koffi": "3.3.2",
+    "uuid": "11.1.1",
+    "zod": "3.25.76"
+  }
+}

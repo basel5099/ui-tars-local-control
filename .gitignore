@@ -1,0 +1,14 @@
+node_modules/
+data/
+*.log
+control.config.json
+runtime.json
+.env
+.env.*
+!.env.example
+*.gguf
+*.exe
+*.dll
+*.tmp
+request.json
+fixture-result.txt
