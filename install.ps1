@@ -5,6 +5,11 @@ param(
     [string]$ModelBaseUrl,
     [string]$ModelName,
     [string]$ModelLauncher,
+    [switch]$WithModel,
+    [string]$ModelRoot,
+    [string]$ModelDirectory,
+    [ValidateSet('auto','cuda','cpu')][string]$Backend = 'auto',
+    [ValidateRange(1024,65535)][int]$ModelPort = 8080,
     [switch]$SkipMcpRegistration
 )
 $ErrorActionPreference = 'Stop'
@@ -34,6 +39,18 @@ if (Test-Path -LiteralPath $taskConfigPath) {
 if ($PSBoundParameters.ContainsKey('ModelBaseUrl')) { $taskSettings.base_url = $ModelBaseUrl }
 if ($PSBoundParameters.ContainsKey('ModelName')) { $taskSettings.model = $ModelName }
 if ($PSBoundParameters.ContainsKey('ModelLauncher')) { $taskSettings.launcher = $ModelLauncher }
+$taskDataDirectory = if ($env:UI_TARS_CONTROL_DATA) { $env:UI_TARS_CONTROL_DATA } elseif ($taskSettings.data_directory) { $taskSettings.data_directory } else { Join-Path $InstallDirectory 'data' }
+$taskLock = Join-Path $taskDataDirectory 'active.lock'
+if (Test-Path -LiteralPath $taskLock) { throw 'A task lock exists. Check bridge health and stop any active task before reinstalling.' }
+if ($WithModel) {
+    if ($PSBoundParameters.ContainsKey('ModelBaseUrl') -or $PSBoundParameters.ContainsKey('ModelName') -or $PSBoundParameters.ContainsKey('ModelLauncher')) { throw 'Use WithModel with ModelRoot/Backend/ModelPort, or configure an existing endpoint with ModelBaseUrl/ModelName/ModelLauncher.' }
+    if (-not $ModelRoot) { $ModelRoot = Join-Path $InstallDirectory 'model' }
+    $ModelRoot = [IO.Path]::GetFullPath($ModelRoot)
+    & (Join-Path $taskSource 'setup-model.ps1') -ModelRoot $ModelRoot -ModelDirectory $ModelDirectory -Backend $Backend -Port $ModelPort -Start
+    $taskSettings.base_url = "http://127.0.0.1:$ModelPort/v1"
+    $taskSettings.model = 'ui-tars-1.5-7b'
+    $taskSettings.launcher = Join-Path $ModelRoot 'Start-Model.ps1'
+}
 $taskEndpoint = [uri]$taskSettings.base_url
 if ($taskEndpoint.Host -notin @('localhost', '127.0.0.1', '[::1]') -or $taskEndpoint.Scheme -notin @('http', 'https') -or $taskEndpoint.UserInfo) { throw 'ModelBaseUrl must be a loopback HTTP(S) endpoint without URL credentials.' }
 if (-not $taskSettings.model) { throw 'ModelName cannot be empty.' }
@@ -41,8 +58,6 @@ if ($taskSettings.launcher) {
     $taskSettings.launcher = (Resolve-Path -LiteralPath $taskSettings.launcher -ErrorAction Stop).Path
     if ([IO.Path]::GetExtension($taskSettings.launcher) -ne '.ps1') { throw 'ModelLauncher must be a PowerShell .ps1 file accepting -ModelOnly.' }
 }
-$taskLock = Join-Path $InstallDirectory 'data\active.lock'
-if (Test-Path -LiteralPath $taskLock) { throw 'A task lock exists. Check bridge health and stop any active task before reinstalling.' }
 
 New-Item -ItemType Directory -Path $InstallDirectory,(Join-Path $InstallDirectory 'src'),(Join-Path $InstallDirectory 'test') -Force | Out-Null
 Copy-Item -Path (Join-Path $taskSource 'src\*') -Destination (Join-Path $InstallDirectory 'src') -Force
@@ -53,7 +68,8 @@ Push-Location $InstallDirectory
 try {
     & $taskNpm ci --omit=dev
     if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed.' }
-    & $taskNode --test test/control.test.mjs
+    $taskTests = @(Get-ChildItem -Path test\*.test.mjs | Select-Object -ExpandProperty FullName)
+    & $taskNode --test @taskTests
     if ($LASTEXITCODE -ne 0) { throw 'Bridge checks failed.' }
     & $taskNode test/mcp-check.mjs
     if ($LASTEXITCODE -ne 0) { throw 'MCP checks failed.' }

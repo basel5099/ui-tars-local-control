@@ -1,0 +1,18 @@
+{
+  "basis": "Counterfactual replay of the recorded local screenshot loop using GPT-4.1 high-detail image token accounting; no cloud model ran this replay.",
+  "source": "https://developers.openai.com/api/docs/guides/images-vision#calculating-costs",
+  "image_appearances_in_requests": 10,
+  "reference_image_input_tokens": 4250,
+  "local_delegation_cloud_images": 0,
+  "optional_final_screenshot_reference_tokens": 425,
+  "excludes": [
+    "text input",
+    "system/tool definitions",
+    "assistant output",
+    "reasoning",
+    "context replays by the supervising client",
+    "cache discounts",
+    "setup and development work"
+  ],
+  "cloud_billed_tokens": null
+}

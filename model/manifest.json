@@ -1,0 +1,19 @@
+{
+  "model_id": "ui-tars-1.5-7b",
+  "model_source": "https://huggingface.co/Mungert/UI-TARS-1.5-7B-GGUF",
+  "model_revision": "c355401ad7af0c469fe829edd3a5abd0530e35e2",
+  "runtime_release": "b11527",
+  "models": [
+    { "name": "UI-TARS-1.5-7B-q4_k_m.gguf", "size": 4777648512, "sha256": "b65488bf94d3f0525cf609c8bc5d03fa4800589546189bdfdc2f6cea0356e7f8" },
+    { "name": "UI-TARS-1.5-7B-f16.mmproj", "size": 1354162880, "sha256": "be731d52f37a5a8e132bc28ab74e621946dfb61b35127cebbb4a0d03ca3ab809" }
+  ],
+  "runtime": {
+    "cuda": [
+      { "name": "llama-b11527-bin-win-cuda-12.4-x64.zip", "size": 265233723, "sha256": "a982e6082dff7425be183d9605775a9538e27fecd35061a33d157a38c996fd4c" },
+      { "name": "cudart-llama-bin-win-cuda-12.4-x64.zip", "size": 391443627, "sha256": "8c79a9b226de4b3cacfd1f83d24f962d0773be79f1e7b75c6af4ded7e32ae1d6" }
+    ],
+    "cpu": [
+      { "name": "llama-b11527-bin-win-cpu-x64.zip", "size": 19520160, "sha256": "2181f0839a21ee093342affefc8c06481179ec58473a1fffe973449c7d11fe7f" }
+    ]
+  }
+}

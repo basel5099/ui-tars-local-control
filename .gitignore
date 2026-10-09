@@ -12,3 +12,11 @@ runtime.json
 *.tmp
 request.json
 fixture-result.txt
+*.partial
+*.mmproj
+model.config.json
+bench/private/
+*.zip
+models/
+downloads/
+runtime-b*/

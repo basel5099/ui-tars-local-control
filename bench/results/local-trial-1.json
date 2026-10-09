@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-09",
+  "task": "Type LOCAL CONTROL OK and click Confirm in the disposable WinForms fixture",
+  "condition": "local_ui_tars_delegation",
+  "model": "ui-tars-1.5-7b",
+  "status": "completed",
+  "independently_verified": true,
+  "elapsed_ms": 12754,
+  "actions": 3,
+  "model_calls": 4,
+  "local_prompt_tokens": 6107,
+  "local_completion_tokens": 303,
+  "local_total_tokens": 6410,
+  "local_usage_complete": true,
+  "cloud_billed_tokens": null,
+  "cloud_screenshots_returned": 0,
+  "verification": "Fresh fixture output file exactly matched LOCAL CONTROL OK. No screenshot was sent to the supervising model during this runner.",
+  "model_requests": [
+    {
+      "usage": {
+        "input": 799,
+        "output": 80,
+        "total": 879
+      },
+      "request_images": 1,
+      "width": 700,
+      "height": 450
+    },
+    {
+      "usage": {
+        "input": 1288,
+        "output": 67,
+        "total": 1355
+      },
+      "request_images": 2,
+      "width": 700,
+      "height": 450
+    },
+    {
+      "usage": {
+        "input": 1766,
+        "output": 79,
+        "total": 1845
+      },
+      "request_images": 3,
+      "width": 700,
+      "height": 450
+    },
+    {
+      "usage": {
+        "input": 2254,
+        "output": 77,
+        "total": 2331
+      },
+      "request_images": 4,
+      "width": 700,
+      "height": 450
+    }
+  ],
+  "mcp_exchanges": [
+    {
+      "tool": "health",
+      "request_utf8_bytes": 2,
+      "response_utf8_bytes": 200
+    },
+    {
+      "tool": "list_windows",
+      "request_utf8_bytes": 47,
+      "response_utf8_bytes": 138
+    },
+    {
+      "tool": "run_task",
+      "request_utf8_bytes": 234,
+      "response_utf8_bytes": 336
+    },
+    {
+      "tool": "get_status",
+      "request_utf8_bytes": 67,
+      "response_utf8_bytes": 804
+    }
+  ]
+}

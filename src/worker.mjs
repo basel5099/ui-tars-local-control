@@ -8,6 +8,7 @@ import { readJob, saveJob, jobPath, releaseLock } from './jobs.mjs';
 import { captureWindow, getWindow, activeHandle, focusWindow, stopKeyPressed, nut } from './desktop.mjs';
 import { validateAction, translateBox } from './guard.mjs';
 import { SYSTEM_PROMPT } from './prompt.mjs';
+import { readUsage } from './usage.mjs';
 const require = createRequire(import.meta.url);
 const { GUIAgent, UITarsModelVersion, StatusEnum } = require('@ui-tars/sdk');
 const { NutJSOperator } = require('@ui-tars/operator-nut-js');
@@ -108,7 +109,11 @@ try {
         const response = await fetch(url, { ...options, redirect: 'error' });
         if (response.ok) {
           const result = await response.clone().json();
-          update({ model_calls: job.model_calls + 1, local_tokens: job.local_tokens + (result.usage?.total_tokens || 0) });
+          const usage = readUsage(result.usage);
+          let images = null;
+          try { images = JSON.parse(options.body).messages.flatMap(m => Array.isArray(m.content) ? m.content : []).filter(c => c.type === 'image_url').length; } catch { }
+          trace({ model_usage: usage, request_images: images, screenshot_width: lastSnapshot?.crop.width, screenshot_height: lastSnapshot?.crop.height });
+          update({ model_calls: job.model_calls + 1, local_tokens: job.local_tokens + (usage?.total || 0), local_prompt_tokens: (job.local_prompt_tokens || 0) + (usage?.input || 0), local_completion_tokens: (job.local_completion_tokens || 0) + (usage?.output || 0), usage_calls: (job.usage_calls || 0) + (usage ? 1 : 0) });
         }
         return response;
       },

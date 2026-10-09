@@ -20,3 +20,9 @@ jobs:
         run: |
           & "$env:RUNNER_TEMP\UI-TARS skill\scripts\control.ps1" health
           if ($LASTEXITCODE -ne 0) { throw 'CLI helper failed.' }
+      - name: Model installer preflight and benchmark checks
+        shell: powershell
+        run: |
+          ./setup-model.ps1 -ModelRoot "$env:RUNNER_TEMP\UI-TARS model" -Backend cpu -CheckOnly
+          node --test bench/estimate.test.mjs
+          if ($LASTEXITCODE -ne 0) { throw 'Benchmark checks failed.' }

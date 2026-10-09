@@ -27,3 +27,8 @@ export function validateAction(action) {
     throw new Error('Text input exceeds the per-action limit.');
   }
 }
+export function logicalScreenSize(width, height, density) {
+  if (![width, height, density?.scaleX, density?.scaleY].every(n => Number.isFinite(n) && n > 0)) throw new Error('Invalid screen dimensions or pixel density.');
+  // Windows rounds logical width and height separately at fractional DPI scales.
+  return { width: Math.round(width / density.scaleX), height: Math.round(height / density.scaleY) };
+}

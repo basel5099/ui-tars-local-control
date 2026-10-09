@@ -30,9 +30,9 @@ This is an independent project built using the [UI-TARS SDK](https://github.com/
 - Windows with an unlocked interactive desktop. Development was tested on Windows 11 x64.
 - Node.js 22 or newer, npm, and Git.
 - Codex CLI on `PATH` for automatic MCP registration, or another local client supporting MCP over stdio.
-- A running UI-TARS 1.5 vision model with an OpenAI-compatible endpoint on loopback. The default is `http://127.0.0.1:8080/v1` with model ID `ui-tars-1.5-7b`.
+- About 9 GB free for the bundled model setup, plus RAM/VRAM for inference. CUDA mode was tested on a 12 GB NVIDIA GPU; 16 GB or more system RAM is a practical starting point. CPU mode is available but much slower and has not been performance-tested here.
 
-The installer installs the bridge and skill. It does **not** download model weights, a model server, or UI-TARS Desktop. Hardware requirements depend on your model and serving configuration. A UI-TARS 1.5 7B Q4_K_M GGUF with its matching vision projector has been tested through llama.cpp on a 12 GB NVIDIA GPU.
+Choose `-WithModel` for a complete setup, or connect an already running UI-TARS 1.5 OpenAI-compatible vision endpoint. The default endpoint is `http://127.0.0.1:8080/v1` with model ID `ui-tars-1.5-7b`. UI-TARS Desktop is optional.
 
 ## Install
 
@@ -41,8 +41,18 @@ In PowerShell:
 ```powershell
 git clone https://github.com/basel5099/ui-tars-local-control.git
 cd ui-tars-local-control
-powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install.ps1 -WithModel
 ```
+
+This downloads UI-TARS 1.5 7B **Q4_K_M**, its matching **vision projector**, and a pinned **llama.cpp** runtime from the original hosts. Downloads resume after interruption and every file is checked against a pinned SHA-256. Setup selects CUDA for detected NVIDIA graphics, otherwise CPU, starts the loopback server, and connects the bridge. Model files total 6.13 GB; the CUDA archives add about 657 MB. [Full model setup and troubleshooting](docs/model-setup.md).
+
+To keep large files on another drive:
+
+```powershell
+.\install.ps1 -WithModel -InstallDirectory 'D:\Apps\UI-TARS-Control' -ModelRoot 'D:\Models\UI-TARS'
+```
+
+If your model is already running, omit `-WithModel` to install only the bridge and skill.
 
 Defaults:
 
@@ -65,7 +75,16 @@ Use `-SkillDirectory` to choose another skill location. Use `-SkipMcpRegistratio
 
 ### Model setup
 
-Use your existing local UI-TARS endpoint, or configure a compatible vision server such as [llama.cpp](https://github.com/ggml-org/llama.cpp). For an already downloaded UI-TARS 1.5 GGUF model and matching vision projector, a starting example is:
+To check hardware and disk space without downloading anything, then install just the model:
+
+```powershell
+.\setup-model.ps1 -ModelRoot 'D:\Models\UI-TARS' -CheckOnly
+.\setup-model.ps1 -ModelRoot 'D:\Models\UI-TARS' -Start
+```
+
+Use `-Backend cuda` or `-Backend cpu` to override detection, `-Port` for a different model port, and `-ModelDirectory` to reuse existing files with the exact names in [the manifest](model/manifest.json). Existing files are verified before reuse. The all-in-one installer uses `-ModelPort` for the corresponding port option.
+
+For an already downloaded model and matching projector, manual [llama.cpp](https://github.com/ggml-org/llama.cpp) startup is also possible:
 
 ```powershell
 & 'C:\path\to\llama-server.exe' -m 'C:\models\ui-tars-1.5-7b-q4_k_m.gguf' --mmproj 'C:\models\ui-tars-1.5-7b-mmproj-f16.gguf' --alias ui-tars-1.5-7b --host 127.0.0.1 --port 8080 -ngl all -c 32768 -np 1
@@ -121,6 +140,14 @@ node "$bridge\src\cli.mjs" stop JOB_ID
 ```
 
 The screenshot command returns a local filename. The installed skill also includes `scripts/control.ps1`, which resolves the bridge location from its local `runtime.json` or `UI_TARS_CONTROL_HOME`.
+
+## Desktop test and token comparison
+
+A disposable Windows form was controlled by the supervising assistant and by local UI-TARS. Both typed the same phrase and clicked Confirm; the saved output was checked independently. The direct run sent four screenshots to the cloud chat. Local delegation used file verification and sent none during the runner.
+
+The first successful local run used **6,410 local tokens** (6,107 input + 303 output), **4 model calls**, and **3 actions**. Cloud billed-token totals are unavailable, so the report keeps them unknown. It includes a separately labelled GPT-4.1 image-token reference calculation rather than claiming a total-token or cost reduction.
+
+See the [measured results, limitations, and reproduction steps](bench/README.md). This is a small synthetic test, not a general performance ranking.
 
 ## Configuration
 

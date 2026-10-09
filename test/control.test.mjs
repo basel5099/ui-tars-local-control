@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { checkLocalUrl, resolveSettings } from '../src/config.mjs';
-import { translateBox, validateAction, assertAllowedApp } from '../src/guard.mjs';
+import { translateBox, validateAction, assertAllowedApp, logicalScreenSize } from '../src/guard.mjs';
 import { taskSchema, jobIdSchema } from '../src/jobs.mjs';
 
 test('cropped screenshot coordinates map to the physical target', () => {
@@ -10,6 +10,10 @@ test('cropped screenshot coordinates map to the physical target', () => {
   const edge = JSON.parse(translateBox('[1,1]', { left: 100, top: 200, width: 800, height: 600 }, 2000, 1000));
   assert.ok(edge[0] * 2000 < 900 && edge[1] * 1000 < 800);
   for (const value of ['[2,0]', '[null,0]', '[0]', '{}', 'bad']) assert.throws(() => translateBox(value, {}, 1, 1));
+});
+test('fractional Windows DPI rounding is handled independently on each axis', () => {
+  assert.deepEqual(logicalScreenSize(2560, 1600, { scaleX: 2560/1707, scaleY: 1600/1067 }), { width: 1707, height: 1067 });
+  assert.throws(() => logicalScreenSize(2560, 1600, { scaleX: 0, scaleY: 1.5 }));
 });
 test('screenshots cannot be redirected to a remote model endpoint', () => {
   checkLocalUrl('http://127.0.0.1:8080/v1');

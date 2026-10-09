@@ -1,6 +1,6 @@
 import { createRequire } from 'node:module';
 import path from 'node:path';
-import { assertAllowedApp } from './guard.mjs';
+import { assertAllowedApp, logicalScreenSize } from './guard.mjs';
 const require = createRequire(import.meta.url);
 export const nut = require('@computer-use/nut-js');
 export const { Jimp } = require('jimp');
@@ -66,9 +66,7 @@ export async function captureWindow(id, expectedPid) {
   if (activeHandle() !== id) throw new Error('Focus changed. The task has stopped; select the intended window again.');
   const region = await selected.window.getRegion();
   const rgb = await (await nut.screen.grab()).toRGB();
-  const density = rgb.pixelDensity.scaleX;
-  if (density !== rgb.pixelDensity.scaleY) throw new Error('Unequal screen scale factors are unsupported.');
-  const fullWidth = Math.round(rgb.width / density), fullHeight = Math.round(rgb.height / density);
+  const { width: fullWidth, height: fullHeight } = logicalScreenSize(rgb.width, rgb.height, rgb.pixelDensity);
   const image = Jimp.fromBitmap({ width: rgb.width, height: rgb.height, data: Buffer.from(rgb.data) });
   image.resize({ w: fullWidth, h: fullHeight });
   const crop = { left: Math.max(0, Math.round(region.left)), top: Math.max(0, Math.round(region.top)), width: 0, height: 0 };

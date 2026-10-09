@@ -72,7 +72,7 @@ export async function startTask(raw) {
   try {
     fs.writeFileSync(lock, JSON.stringify({ job_id: id })); fs.closeSync(lock); lock = undefined;
     const dir = jobPath(id); fs.mkdirSync(dir);
-    const job = { ...input, job_id: id, status: 'queued', started_at: new Date().toISOString(), steps: 0, model_calls: 0, local_tokens: 0, target_pid: target.pid, target_process: target.process, target_title: target.title, message: 'Starting local worker.', verified: false };
+    const job = { ...input, job_id: id, status: 'queued', started_at: new Date().toISOString(), steps: 0, model_calls: 0, local_tokens: 0, local_prompt_tokens: 0, local_completion_tokens: 0, usage_calls: 0, target_pid: target.pid, target_process: target.process, target_title: target.title, message: 'Starting local worker.', verified: false };
     saveJob(job);
     const log = fs.openSync(path.join(dir, 'worker.log'), 'a');
     let child;
@@ -93,6 +93,8 @@ export function summary(job) {
   return {
     job_id: job.job_id, status: job.status, target_title: job.target_title, steps: job.steps,
     model_calls: job.model_calls, local_tokens: job.local_tokens,
+    local_prompt_tokens: job.local_prompt_tokens ?? null, local_completion_tokens: job.local_completion_tokens ?? null,
+    local_usage_complete: job.model_calls > 0 && job.usage_calls === job.model_calls,
     message: job.message, last_action: job.last_action, model_summary: job.model_summary,
     verified: false, screenshot_available: Boolean(job.screenshot),
     elapsed_seconds: Math.round(((job.ended_at ? Date.parse(job.ended_at) : Date.now()) - Date.parse(job.started_at)) / 1000),

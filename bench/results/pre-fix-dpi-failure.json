@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-09",
+  "task": "Type LOCAL CONTROL OK and click Confirm in the disposable WinForms fixture",
+  "condition": "local_ui_tars_delegation",
+  "model": "ui-tars-1.5-7b",
+  "status": "needs_attention",
+  "independently_verified": false,
+  "elapsed_ms": 1258,
+  "actions": 0,
+  "model_calls": 0,
+  "local_prompt_tokens": 0,
+  "local_completion_tokens": 0,
+  "local_total_tokens": 0,
+  "local_usage_complete": false,
+  "cloud_billed_tokens": null,
+  "cloud_screenshots_returned": 0,
+  "verification": "No output file was created. Aborted before inference because the original bridge rejected fractional DPI rounding.",
+  "model_requests": [],
+  "mcp_exchanges": [
+    {
+      "tool": "health",
+      "request_utf8_bytes": 2,
+      "response_utf8_bytes": 200
+    },
+    {
+      "tool": "list_windows",
+      "request_utf8_bytes": 47,
+      "response_utf8_bytes": 138
+    },
+    {
+      "tool": "run_task",
+      "request_utf8_bytes": 234,
+      "response_utf8_bytes": 336
+    },
+    {
+      "tool": "get_status",
+      "request_utf8_bytes": 67,
+      "response_utf8_bytes": 368
+    }
+  ]
+}

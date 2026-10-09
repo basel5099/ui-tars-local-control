@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-09",
+  "condition": "direct_supervisor_via_fixture_only_harness",
+  "task": "Type LOCAL CONTROL OK and click Confirm in the disposable WinForms fixture",
+  "independently_verified": true,
+  "actions": 3,
+  "cloud_screenshots_returned": 4,
+  "screenshots": [
+    {
+      "width": 700,
+      "height": 450
+    },
+    {
+      "width": 700,
+      "height": 450
+    },
+    {
+      "width": 700,
+      "height": 450
+    },
+    {
+      "width": 700,
+      "height": 450
+    }
+  ],
+  "local_model_tokens": 0,
+  "cloud_billed_tokens": null,
+  "reference_image_input_tokens_once_each": 1700,
+  "reference_model": "GPT-4.1 high detail; a reference estimate, not the model or billed usage of the supervising Codex session",
+  "excludes": [
+    "text",
+    "tool definitions",
+    "assistant output",
+    "reasoning",
+    "context replays",
+    "cache discounts",
+    "setup and development"
+  ],
+  "verification": "Supervisor inspected every screenshot and confirmed the final label. The fresh fixture output file also exactly matched LOCAL CONTROL OK."
+}
